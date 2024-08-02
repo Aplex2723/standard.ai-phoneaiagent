@@ -3,3 +3,5 @@
 .app.py.swm
 .app.py.swo
 .app.py.swp
+
+.env

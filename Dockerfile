@@ -8,7 +8,7 @@ WORKDIR /app
 COPY . /app
 
 # Instalar las dependencias
-RUN pip install --no-cache-dir Flask twilio requests azure-identity openai gunicorn azure-storage-blob azure-data-tables
+RUN pip install --no-cache-dir Flask twilio requests azure-identity openai gunicorn azure-storage-blob azure-data-tables python-dotenv
 
 # Exponer el puerto en el que la aplicación escuchará
 EXPOSE 8000

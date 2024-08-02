@@ -14,6 +14,9 @@ import json
 from azure.storage.blob import BlobServiceClient, ContentSettings, generate_blob_sas, BlobSasPermissions
 from datetime import datetime, timedelta
 from azure.data.tables import TableServiceClient, TableEntity
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Configuración de logging
 logging.basicConfig(level=logging.INFO)
@@ -24,17 +27,17 @@ app = Flask(__name__)
 DEFAULT_MESSAGE_TYPE = 'transcription'
 
 # Configura Azure Speech y OpenAI
-azure_speech_key = '6d0a8b400f9a46ba83e57174cf4ca55d'
+azure_speech_key = os.getenv('AZ_SPEECH_KEY')
 azure_speech_region = 'eastus'
 voice_name = "es-MX-DaliaNeural"
 
 openai_endpoint = 'https://openai-eastus2-models.openai.azure.com/'
-openai_api_key = '9cfe887ad5e64f05bcc906621eb5aee6'
+openai_api_key = os.getenv('AZ_OPENAI_KEY')
 deployment_id = 'temp'
 whisper_deployment_id = 'whisper-1'
 
 # Configuring Azure Storage
-azure_storage_connection_string = 'DefaultEndpointsProtocol=https;AccountName=aiagentsaccount;AccountKey=fYi/Ui7r+X9NbLpxlvfSp0vggwGhly7cBjeFndQuCPTbp5wQDVgSRYjjGV9fBVeoRkE3lw/JWoxT+ASt2JjTgQ==;EndpointSuffix=core.windows.net'
+azure_storage_connection_string = os.getenv('AZ_CONNECTION_STRING_STORAGE')
 azure_container_name = 'temp-container'
 
 # Initializing Azure Storage Tables
@@ -44,8 +47,8 @@ table_service_client = TableServiceClient.from_connection_string(conn_str=azure_
 table_client = table_service_client.get_table_client(azure_table_name)
 
 # Credenciales de Twilio
-twilio_account_sid = 'ACd821ac28044b60145a9f5b118b3ece9c'
-twilio_auth_token = '187acd59a408654dc7a5979d4a3446eb'
+twilio_account_sid = os.getenv('TWILIO_SID')
+twilio_auth_token = os.getenv('TWILIO_AUTH_TOKEN')
 
 llm_system_prompt = "You are a real estate expert, your job is only to explain the characteristics of a property, if the user shows interest, say that you will contact an advisor as soon as possible, your goal is to advise the user superficially and provide first hand information, do not answer topics of conversation irrelevant to your goal. Respond to the user in the spoken language"
 
