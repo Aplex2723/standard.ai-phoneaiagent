@@ -4,11 +4,12 @@ FROM python:3.11
 # Establecer el directorio de trabajo
 WORKDIR /app
 
-# Copiar los archivos de la aplicación al contenedor
-COPY . /app
+# Copiar los archivos de requerimientos y instalar dependencias
+COPY requirements.txt requirements.txt
+RUN pip install -r requirements.txt
 
-# Instalar las dependencias
-RUN pip install --no-cache-dir Flask twilio requests azure-identity openai gunicorn azure-storage-blob azure-data-tables python-dotenv
+# Copiar todo el contenido de la aplicación
+COPY . .
 
 # Exponer el puerto en el que la aplicación escuchará
 EXPOSE 8000
