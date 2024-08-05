@@ -33,7 +33,7 @@ voice_name = "es-MX-DaliaNeural"
 
 openai_endpoint = 'https://openai-eastus2-models.openai.azure.com/'
 openai_api_key = os.getenv('AZ_OPENAI_KEY')
-deployment_id = 'temp'
+deployment_id = 'gpt-35-turbo'
 whisper_deployment_id = 'whisper-1'
 
 # Configuring Azure Storage
@@ -73,6 +73,8 @@ def voice():
 
 @app.route("/process_voice", methods=['POST'])
 def process_voice():
+    # Starting timer for metrics
+    start_time = time.time()
     recording_url = request.form['RecordingUrl']
     from_number = request.form["From"]
     twilio_call_ssid = request.form["CallSid"]
@@ -81,7 +83,7 @@ def process_voice():
     
     # Descargar la grabación de Twilio
     try:
-        time.sleep(2)
+        # time.sleep(2)
         audio_data = download_audio(recording_url)
         logger.info("Audio descargado")
     except Exception as e:
@@ -141,6 +143,11 @@ def process_voice():
     resp = VoiceResponse()
     resp.say(response_text, language="es-mx")
     resp.record(max_length=60, action="/process_voice", timeout=2)
+
+    end_time = time.time()
+    execution_time = end_time - start_time
+    logger.info(f"El tiempo de ejecución del script es: {execution_time} segundos")
+
     return Response(str(resp), mimetype="text/xml")
 
 def generate_response(transcript, recording_url, from_number, twilio_call_ssid):
@@ -217,7 +224,8 @@ def transcribe_audio(raw_audio):
     transcript = openai_client.audio.transcriptions.create(
         model=whisper_deployment_id,
         file=raw_audio,
-        response_format="text"
+        response_format="text",
+        language="es"
     )
     logger.info(f"Transcription result from whisper-1: {transcript}")
     return transcript    
