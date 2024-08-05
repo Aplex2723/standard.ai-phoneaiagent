@@ -68,7 +68,7 @@ def voice():
     # Configura Twilio para capturar la voz del usuario
     resp = VoiceResponse()
     resp.say("Hola, ¿cómo puedo ayudarte?", language="es-mx")
-    resp.record(max_length=60, action="/process_voice")
+    resp.record(max_length=60, action="/process_voice", timeout=2)
     return Response(str(resp), mimetype="text/xml")
 
 @app.route("/process_voice", methods=['POST'])
@@ -140,7 +140,7 @@ def process_voice():
     # Responder con el audio generado
     resp = VoiceResponse()
     resp.say(response_text, language="es-mx")
-    resp.record(max_length=60, action="/process_voice")
+    resp.record(max_length=60, action="/process_voice", timeout=2)
     return Response(str(resp), mimetype="text/xml")
 
 def generate_response(transcript, recording_url, from_number, twilio_call_ssid):
