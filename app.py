@@ -83,7 +83,7 @@ def process_voice():
     
     # Descargar la grabación de Twilio
     try:
-        # time.sleep(2)
+        time.sleep(1)
         audio_data = download_audio(recording_url)
         logger.info("Audio descargado")
     except Exception as e:
@@ -194,7 +194,7 @@ def download_audio(recording_url):
     recording_sid = recording_url.split('/')[-1]
 
     # Intentar descargar la grabación con lógica de reintento
-    retries = 3
+    retries = 6
     for attempt in range(retries):
         try:
             # Obtener la grabación utilizando el SID
@@ -215,8 +215,8 @@ def download_audio(recording_url):
         except Exception as e:
             logger.error(f"Intento {attempt + 1} de {retries} fallido: {e}")
             if attempt < retries - 1:
-                logger.info("Reintentando en 1 segundos...")
-                time.sleep(1)
+                logger.info("Reintentando en 0.5 segundos...")
+                time.sleep(0.5)
             else:
                 raise
 
