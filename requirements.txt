@@ -1,9 +1,0 @@
-Flask
-twilio
-requests
-azure-identity
-openai
-gunicorn
-azure-storage-blob
-azure-data-tables
-python-dotenv

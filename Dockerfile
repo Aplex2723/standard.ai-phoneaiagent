@@ -1,19 +1,12 @@
-# Utilizar una imagen base de Python
-FROM python:3.11
+FROM vocodedev/vocode:latest
 
-# Establecer el directorio de trabajo
-WORKDIR /app
+WORKDIR /code
+COPY ./pyproject.toml /code/pyproject.toml
+COPY ./poetry.lock /code/poetry.lock
+RUN pip install --no-cache-dir --upgrade poetry
+RUN poetry config virtualenvs.create false
+RUN poetry install --no-dev --no-interaction --no-ansi
+COPY main.py /code/main.py
+COPY speller_agent.py /code/speller_agent.py
 
-# Copiar los archivos de requerimientos y instalar dependencias
-COPY requirements.txt requirements.txt
-RUN pip install -r requirements.txt
-
-# Copiar todo el contenido de la aplicación
-COPY . .
-
-# Exponer el puerto en el que la aplicación escuchará
-EXPOSE 8000
-
-# Comando para ejecutar la aplicación
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "app:app"]
-
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "3000"]
